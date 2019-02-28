@@ -1,0 +1,65 @@
+<h3 *ngIf="contratIdToUpdate; else create"> 
+   Update contrat for Id: {{contratIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New Contrat </h3>
+</ng-template>
+<div>
+ <form [formGroup]="contratForm" (ngSubmit)="onContratFormSubmit()">
+    <table class="table  table-borderless table-striped  table-hover table-sm " style="width: 600px;"> 
+      <tr><td>Enter id</td><td><input style="width: 32rem;" class="form-control " formControlName="id" placeholder="id" name="id" id="id">
+        <label *ngIf="contratForm.get('id').invalid && processValidation" [ngClass] = "'error'"> id is required. </label>
+    </td></tr>
+
+     <tr><td>Enter type</td><td><input style="width: 32rem;" class="form-control " formControlName="type" placeholder="type" name="type" id="type">
+    <label *ngIf="contratForm.get('type').invalid && processValidation" [ngClass] = "'error'"> type is required. </label>
+</td></tr>	
+    <tr><td>Enter mission</td><td><input style="width: 32rem;" class="form-control " formControlName="mission"  placeholder="mission" name="mission" id="mission">
+	       <label *ngIf="contratForm.get('mission').invalid && processValidation" [ngClass] = "'error'"> mission is required. </label>
+     </td></tr>
+     <tr><td>Enter commentaire</td><td><input style="width: 32rem;" class="form-control " formControlName="commentaire"   placeholder="commentaire" name="commentaire" id="commentaire">
+      <label *ngIf="contratForm.get('commentaire').invalid && processValidation" [ngClass] = "'error'"> commentaire is required. </label>
+  </td></tr>
+
+    <tr><td colspan="2">
+	    <button style="background-color:#004d9d;" *ngIf="!contratIdToUpdate">CREATE</button>  
+		<button style="background-color:#004d9d;" *ngIf="contratIdToUpdate">UPDATE</button>  
+	    <button style="background-color:#004d9d;" (click)="backToCreateContrat()" *ngIf="contratIdToUpdate" class="btn btn-primary ">Go Back</button>  
+	</td></tr>
+  </table>
+ </form> 
+ <br/>
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	    contrat added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        contrat already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+       contrat updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        contrat deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/images/loading.gif">
+ </ng-template>
+</div>
+
+<h3>Contrat Details</h3>
+<table class="table  table-striped  table-hover  ">
+  <tr><th> Id</th> <th>type</th><th>mission</th><th>commentaire</th><th></th><th></th></tr>
+  <tr *ngFor="let contrat of allContrats" >
+    <td>{{contrat.id}}</td> <td>{{contrat.type}}</td> <td>{{contrat.mission}}</td> <td>{{contrat.commentaire}}</td>
+	<td><button type="button" (click)="loadContratToEdit(contrat.id)">Edit</button> </td> 
+	<td><button type="button" (click)="deleteContrat(contrat.id)">Delete</button></td>
+  </tr>
+</table>
+
+
+

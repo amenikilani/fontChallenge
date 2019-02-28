@@ -1,0 +1,68 @@
+<h3 *ngIf="ressourceIdToUpdate; else create"> 
+  Update ressource for Id: {{ressourceIdToUpdate}}
+</h3>
+<ng-template #create>
+  <h3> Create New Ressource </h3>
+</ng-template>
+<div>
+<form [formGroup]="ressourceForm" (ngSubmit)="onRessourceFormSubmit()">
+   <table class="table  table-borderless table-striped  table-hover table-sm " style="width: 600px;"> 
+     <tr><td>Enter id</td><td><input style="width: 32rem;" class="form-control " formControlName="id" placeholder="id" name="id" id="id">
+       <label *ngIf="ressourceForm.get('id').invalid && processValidation" [ngClass] = "'error'"> id is required. </label>
+   </td></tr>
+
+    <tr><td>Enter nom</td><td><input style="width: 32rem;" class="form-control " formControlName="nom" placeholder="nom" name="nom" id="nom">
+   <label *ngIf="ressourceForm.get('nom').invalid && processValidation" [ngClass] = "'error'"> nom is required. </label>
+</td></tr>
+<tr><td>Enter prenom</td><td><input style="width: 32rem;" class="form-control " formControlName="prenom" placeholder="prenom" name="prenom" id="prenom">
+  <label *ngIf="ressourceForm.get('prenom').invalid && processValidation" [ngClass] = "'error'"> prenom is required. </label>
+</td></tr>	
+   <tr><td>Enter matricule</td><td><input style="width: 32rem;" class="form-control " formControlName="matricule"  placeholder="matricule" name="matricule" id="matricule">
+        <label *ngIf="ressourceForm.get('matricule').invalid && processValidation" [ngClass] = "'error'"> matricule is required. </label>
+    </td></tr>
+    <tr><td>Enter dateEntree</td><td><input style="width: 32rem;" class="form-control " formControlName="dateEntree"   placeholder="dateEntree" name="dateEntree" id="dateEntree">
+     <label *ngIf="ressourceForm.get('dateEntree').invalid && processValidation" [ngClass] = "'error'"> dateEntree is required. </label>
+ </td></tr>
+
+   <tr><td colspan="2">
+     <button style="background-color:#004d9d;" *ngIf="!ressourceIdToUpdate">CREATE</button>  
+   <button style="background-color:#004d9d;" *ngIf="ressourceIdToUpdate">UPDATE</button>  
+     <button style="background-color:#004d9d;" (click)="backToCreateRessource()" *ngIf="ressourceIdToUpdate" class="btn btn-primary ">Go Back</button>  
+ </td></tr>
+ </table>
+</form> 
+<br/>
+<div *ngIf="statusCode; else processing">
+  <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+     ressource added successfully.
+  </div>   
+  <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+       ressource already exists.
+  </div>   	
+  <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+      ressource updated successfully.
+  </div>   	      
+  <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+       ressource deleted successfully.
+  </div>   	   
+  <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+       Internal Server Error.
+  </div>	
+</div>
+<ng-template #processing>
+ <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+</ng-template>
+</div>
+
+<h3>Ressource Details</h3>
+<table class="table  table-striped  table-hover  ">
+ <tr><th> Id</th> <th>nom</th><th>prenom</th><th>matricule</th><th>dateEntree</th><th></th><th></th></tr>
+ <tr *ngFor="let ressource of allRessources" >
+   <td>{{ressource.id}}</td> <td>{{ressource.nom}}</td> <td>{{ressource.prenom}}</td><td>{{ressource.matricule}}</td> <td>{{ressource.dateEntree}}</td>
+ <td><button type="button" (click)="loadRessourceToEdit(ressource.id)"><img src="assets/images/edit.png" width="10"></button> </td> 
+ <td><button type="button" (click)="deleteRessource(ressource.id)"><img src="assets/images/delete.png" width="10"></button></td>
+ </tr>
+</table>
+
+
+
